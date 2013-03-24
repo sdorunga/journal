@@ -109,6 +109,9 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.21)
     minitest (4.7.0)
+    minitest-rails (0.9.1)
+      minitest (~> 4.7)
+      rails (>= 3.0)
     minitest-spec-rails (4.7.2)
       minitest (~> 4.7)
       rails (>= 3.0)
@@ -208,6 +211,7 @@ DEPENDENCIES
   html2haml (>= 1.0.1)
   hub (>= 1.10.2)
   jquery-rails
+  minitest-rails
   minitest-spec-rails (>= 4.3.8)
   minitest-wscolor (>= 0.0.3)
   rails (= 3.2.13)
