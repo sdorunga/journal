@@ -1,0 +1,5 @@
+%p
+    Title: #{@entry.title}
+    Content: #{@entry.content}
+    = link_to 'Edit', edit_entry_path(@entry.id)
+    = content_tag :div, "", id: "cloud", data: {words: @numbers}

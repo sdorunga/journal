@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require foundation_and_overrides
+ *= require jqcloud
  *= require_tree .
 */
 .brand {
@@ -35,4 +36,9 @@ ul.nav li {
 #flash_alert {
   background-color: #FCC;
   border: solid 1px #C66;
+}
+.blue_top {
+  width: 100%;
+  height: 20px;
+  background: #2ba6cb;
 }

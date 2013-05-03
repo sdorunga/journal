@@ -1,9 +1,10 @@
-= simple_form_for(@post) do |f|
+= simple_form_for(@entry) do |f|
   = f.error_notification
 
   .form-inputs
-    = f.input :title
-    = f.input :content
+    = f.input :title, placeholder: "Call it something special", label: false
+    = f.input :content, placeholder: "Go ahead tell me all about it...", label: false
+    = f.input :time_capsule
 
   .form-actions
     = f.button :submit

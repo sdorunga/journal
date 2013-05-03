@@ -1,5 +1,19 @@
-%h1 Entries
-- @entries.each do |entry|
-  %p
-    Title: #{entry.title}
-    Content: #{entry.content}
+.row 
+  %h1.large-12.columns Journal Entries - Total Word Count : #{@word_count}
+
+.row
+  = link_to "New", new_entry_path, :class => "large-4 large-offset-4 columns button new"
+
+.row
+  .entry_list.large-8.large-offset-2.columns
+    - @entries.each do |entry|
+      -if !entry.try(:time_capsule?) 
+        %p
+          #{entry.words} #{entry.created_at.strftime("%A %d %B %Y")} | #{link_to entry.title, entry} - #{entry.content[0..30]}...
+      -elsif entry.time_capsule > Time.now()
+        %p
+          #{entry.words} #{entry.created_at.strftime("%A %d %B %Y")} | entry will unlock in #{(entry.time_capsule.to_date-Time.now().to_date).to_i} days
+
+      -elsif entry.time_capsule < Time.now()
+        %p
+          #{entry.words} #{entry.created_at.strftime("%A %d %B %Y")} | #{link_to entry.title, entry} - #{entry.content[0..30]}...

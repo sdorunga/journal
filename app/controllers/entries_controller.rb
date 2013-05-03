@@ -1,9 +1,12 @@
 class EntriesController < ApplicationController
+	after_filter :word_count, :only => [:create, :update]
+
 	def create
 		@entry = Entry.new(params[:entry])
 
 		if @entry.save
-			redirect_to @entry, notice: "successfully created entry"
+			@entry.words = @entry.content.split.size
+			redirect_to entries_path, notice: "successfully created entry"
 		else
 			render action: "new"
 		end
@@ -22,6 +25,9 @@ class EntriesController < ApplicationController
 
 	def index
 		@entries = Entry.all
+		@word_count = Entry.sum('words')
+		@entry_count = Entry.count
+		@avg_words = @word_count/@entry_count
 	end
 
 	def new
@@ -30,16 +36,44 @@ class EntriesController < ApplicationController
 
 	def show
 		@entry = Entry.find(params[:id])
+		@numbers = occurances 
+	end
+
+	def stats
+		@word_count = Entry.sum('words')
+		@entry_count = Entry.count
+		@avg_words = @word_count/@entry_count
+		@capsule_count = Entry.where('time_capsule > ?', Time.now).count
 	end
 
 	def update
-		@post = Post.find(params[:id])
+		@entry = Entry.find(params[:id])
 
-    respond_to do |format|
-      if @post.update_attributes(params[:post])
-        redirect_to @entry, notice: 'Entry was successfully updated.'
-      else
-        render action: "edit"
-      end
-    end
+    	if @entry.update_attributes(params[:entry])
+    		@entry.words = @entry.content.split.size
+      		redirect_to entries_path, notice: 'Entry was successfully updated.'
+    	else
+      		render action: "edit"
+    	end
+	end
+
+	private
+
+	def word_count
+		@entry.words = @entry.content.split.size
+		@entry.save
+	end
+
+	def occurances
+		data = []
+		exclude = ["a", "an", "the", "of", "to", "do", "is", "and", "which", "who", "where", "when", "what", "with", "for", "from", "at", "this", "that", "these", "with"]
+		frequency = Hash.new(0)
+		@list = @entry.content.scan(/[^\W\d][\w'-]*(?<=\w)/) do |w|  
+			unless exclude.include?(w.downcase) 
+				frequency[w] += 1 
+			end
+		end
+		frequency.each {|key,value| data.push({text: key, weight: value})}
+		return data.to_json
+	end
 end
